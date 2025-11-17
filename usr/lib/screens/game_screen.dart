@@ -21,7 +21,7 @@ class _GameScreenState extends State<GameScreen> {
   int _pot = 0;
   String _gameMessage = '开始新游戏';
   bool _gameStarted = false;
-  bool _showdown = false;
+  bool _isShowdown = false;
 
   @override
   void initState() {
@@ -36,7 +36,7 @@ class _GameScreenState extends State<GameScreen> {
       _pot = 0;
       _gameMessage = '游戏开始！';
       _gameStarted = true;
-      _showdown = false;
+      _isShowdown = false;
       
       // 发手牌
       final deck = _pokerService.createDeck();
@@ -125,9 +125,9 @@ class _GameScreenState extends State<GameScreen> {
     });
   }
 
-  void _showdown() {
+  void _performShowdown() {
     setState(() {
-      _showdown = true;
+      _isShowdown = true;
       
       final playerHand = _pokerService.evaluateHand([..._player.hand, ..._communityCards]);
       final aiHand = _pokerService.evaluateHand([..._ai.hand, ..._communityCards]);
@@ -200,7 +200,7 @@ class _GameScreenState extends State<GameScreen> {
               Expanded(
                 child: PlayerWidget(
                   player: _ai,
-                  showCards: _showdown,
+                  showCards: _isShowdown,
                 ),
               ),
               
@@ -339,8 +339,8 @@ class _GameScreenState extends State<GameScreen> {
                               const SizedBox(width: 8),
                               Expanded(
                                 child: ElevatedButton(
-                                  onPressed: _communityCards.length == 5 && !_showdown
-                                      ? _showdown
+                                  onPressed: _communityCards.length == 5 && !_isShowdown
+                                      ? _performShowdown
                                       : null,
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.orange,
